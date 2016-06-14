@@ -1,0 +1,10 @@
+FROM golang:1.6
+MAINTAINER David Blooman <david.blooman@gmail.com>
+
+LABEL bootstrap.api="true"
+
+# Add code
+ADD . /go/src/github.com/DaveBlooman/bootstrap-api
+
+# Set current working directory
+WORKDIR /go/src/github.com/DaveBlooman/bootstrap-api

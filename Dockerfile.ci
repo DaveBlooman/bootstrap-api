@@ -1,0 +1,39 @@
+FROM centos:7
+MAINTAINER David Blooman <david.blooman@gmail.com>
+
+# Install dependencies
+RUN yum install -y \
+  curl-devel \
+  expat-devel \
+  gcc \
+  gettext-devel \
+  openssl-devel \
+  perl-ExtUtils-MakeMaker \
+  tar \
+  zlib-devel \
+  make
+
+# Build and install Git from source
+RUN curl -Lo - https://github.com/git/git/archive/v2.5.1.tar.gz | tar -C /tmp -zxf -
+RUN cd /tmp/git-2.5.1 && make prefix=/usr/local/git all && make prefix=/usr/local/git install && rm -rf /tmp/git-2.5.1
+
+# Install Go from binary
+RUN curl -o - https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+ENV GOPATH /go
+
+# Add Git and Go to PATH
+ENV PATH $PATH:/usr/local/go/bin:/go/bin:/usr/local/git/bin
+
+# Install godo
+RUN ["go", "get", "-u", "-v", "gopkg.in/godo.v1/cmd/godo"]
+RUN ["go", "get", "-u", "-v", "github.com/tools/godep"]
+
+ADD . $GOPATH/src/github.com/DaveBlooman/bootstrap-api
+
+WORKDIR $GOPATH/src/github.com/DaveBlooman/bootstrap-api
+
+RUN ["godo"]
+
+# Add jenkins user
+RUN useradd -m -u 250 jenkins
+USER jenkins

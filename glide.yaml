@@ -1,0 +1,13 @@
+package: github.com/DaveBlooman/bootstrap-api
+import:
+- package: github.com/DaveBlooman/api-common
+  subpackages:
+  - caching
+  - logger
+  - storage
+- package: github.com/DaveBlooman/bootstrap-api
+  subpackages:
+  - cosmos
+- package: github.com/gorilla/mux
+- package: github.com/joho/godotenv
+- package: gopkg.in/godo.v1
